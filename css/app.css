@@ -1,0 +1,59 @@
+body {
+  background-color: black;
+  color:white;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+/* .formLine {
+  margin:10px;
+  padding:10px;
+  background-color: cornflowerblue;
+} */
+
+.modal-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: whitesmoke;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.modal {
+  position: absolute;
+  margin: auto;
+  bottom: 240px;
+  border: 3px solid rgba(245, 245, 245, 0.726);
+  border-radius: 50px;
+  height: 150px;
+  width: 380px;
+  line-height: 100px;
+  background-color: hsl(280, 100%, 50%);
+  z-index: 1;
+  box-shadow: 2px 2px 3px hsla(266, 100%, 50%, 0.863);
+}
+
+.modal-btn {
+  border: 2px solid rgba(245, 245, 245, 0.63);
+  position: absolute;
+  box-shadow: 2px 3px 3px hsla(266, 100%, 50%, 0.863);
+  bottom: 260px;
+  border-radius: 50px;
+  background-color: hsl(202, 100%, 50%);
+  height: 50px;
+  width: 120px;
+  z-index: 2;
+  line-height: 50px;
+  cursor: pointer;
+}
+
+.hide {
+  display: none;
+}
+
