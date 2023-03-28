@@ -3,7 +3,7 @@
 const WALL = '#'
 const FOOD = '.'
 const EMPTY = ' '
-const POWER_FOOD = '🍰'
+const POWER_FOOD = '🦠'
 const CHERRY = '🍒'
 
 const gGame = {
@@ -15,6 +15,7 @@ var gBoard
 var gIsVictory = false
 var gRemainingFoodCount
 var gIsSuperPower = false
+var gCherryInterval = null
 
 function onInit() {
     console.log('hello')
@@ -42,17 +43,17 @@ function buildBoard() {
             if (i === 0 || i === size - 1 ||
                 j === 0 || j === size - 1 ||
                 (j === 3 && i > 4 && i < size - 2)) {
-                    board[i][j] = WALL
-                } else if ((i === 1 && j === 1) ||
+                board[i][j] = WALL
+            } else if ((i === 1 && j === 1) ||
                 (i === 1 && j === size - 2) ||
                 (i === size - 2 && j === 1) ||
                 (i === size - 2 && j === size - 2)) {
-                    board[i][j] = POWER_FOOD
-                } else {
-                    board[i][j] = FOOD
-                    gRemainingFoodCount++
+                board[i][j] = POWER_FOOD
+            } else {
+                board[i][j] = FOOD
+                gRemainingFoodCount++
 
-                }
+            }
         }
     }
 
@@ -69,15 +70,6 @@ function updateScore(diff) {
 
 }
 
-function gameOver(isVictory) {
-    console.log('Game Over')
-    // TODO
-    clearInterval(gIntervalGhosts)
-    renderCell(gPacman.location, '🪦')
-    displayGameOver(isVictory)
-    gGame.isOn = false
-}
-
 function displayGameOver(isVictory) {
     var elModalContainer = document.querySelector('.modal-container')
     elModalContainer.classList.remove('hide')
@@ -90,13 +82,27 @@ function displayGameOver(isVictory) {
 }
 
 function addCherry() {
-    var cherryInterval = setInterval(() => {
+    gCherryInterval = setInterval(() => {
         var emptyCell = getEmptyPos()
+        if (!emptyCell) return
         gBoard[emptyCell.i][emptyCell.j] = CHERRY
         renderCell(emptyCell, CHERRY)
     }, 15000);
 }
 
+function gameOver(isVictory) {
+    console.log('Game Over')
+    // TODO
+    console.log('gCherryInterval: ', gCherryInterval)
+    clearInterval(gIntervalGhosts)
+    clearInterval(gCherryInterval)
+    renderCell(gPacman.location, '🪦')
+    displayGameOver(isVictory)
+    gGame.isOn = false
+}
+
+
 function checkVictory() {
     if (gRemainingFoodCount === 0) gameOver(true)
+
 }

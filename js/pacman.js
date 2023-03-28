@@ -1,16 +1,17 @@
 'use strict'
 
-const PACMAN = '😷'
+const PACMAN = '🐟'
 var gPacman
 
 function createPacman(board) {
     // TODO: initialize gPacman...
     gPacman = {
         location: {
-            i:2, 
-            j:2
+            i: 2,
+            j: 2
         },
-        isSuper: false
+        isSuper: false,
+        deg: 0
     }
     board[gPacman.location.i][gPacman.location.j] = PACMAN
     gRemainingFoodCount--
@@ -31,17 +32,17 @@ function movePacman(ev) {
         if (!gIsSuperPower) {
             gameOver(false)
             return
-        } else { 
+        } else {
             killGhost(nextLocation)
         }
     }
-    
-    if (nextCell === FOOD){
+
+    if (nextCell === FOOD) {
         updateScore(1)
         gRemainingFoodCount--
         checkVictory()
     }
-    
+
     if (nextCell === POWER_FOOD) {
         if (!gIsSuperPower) {
             gIsSuperPower = true
@@ -65,7 +66,7 @@ function movePacman(ev) {
     gBoard[nextLocation.i][nextLocation.j] = PACMAN
     gPacman.location = nextLocation
     // DONE: update the DOM
-    renderCell(nextLocation, PACMAN)
+    renderCell(nextLocation, getPacmanHTML(gPacman.deg))
 }
 
 function getNextLocation(eventKeyboard) {
@@ -78,18 +79,25 @@ function getNextLocation(eventKeyboard) {
     switch (eventKeyboard) {
         case 'ArrowUp':
             nextLocation.i--
+            gPacman.deg = 90
             break;
         case 'ArrowRight':
             nextLocation.j++
-            break;
+            gPacman.deg = 180
+                break;
         case 'ArrowDown':
             nextLocation.i++
-            break;
+            gPacman.deg = -90
+                    break;
         case 'ArrowLeft':
             nextLocation.j--
-            break;
+            gPacman.deg = 0
+                    break;
     }
     // DONE: figure out nextLocation
     return nextLocation
 }
 
+function getPacmanHTML(deg) {
+    return `<div style="transform: rotate(${deg}deg)">${PACMAN}</div>`
+}

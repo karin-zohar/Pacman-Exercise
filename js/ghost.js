@@ -1,6 +1,6 @@
 'use strict'
 
-const GHOST = '&#9781'
+const GHOST = '👻'
 var gGhosts = []
 
 var gIntervalGhosts
@@ -30,6 +30,7 @@ function createGhost(board) {
 }
 
 function moveGhosts() {
+    
     // DONE: loop through ghosts
     // console.log('move ghosts')
     for (var i = 0; i < gGhosts.length; i++) {
@@ -54,6 +55,7 @@ function moveGhost(ghost) {
     if (nextCell === GHOST) return
     if (nextCell === WALL) return
     if (nextCell === POWER_FOOD) return
+    if (nextCell === CHERRY) return
 
     // DONE: hitting a pacman? call gameOver
     if (nextCell === PACMAN) {
@@ -67,6 +69,7 @@ function moveGhost(ghost) {
 
     // DONE: moving from current location:
     // DONE: update the model 
+    if (ghost.currCellContent === PACMAN) ghost.currCellContent = EMPTY
     gBoard[ghost.location.i][ghost.location.j] = ghost.currCellContent
     // DONE: update the DOM
     renderCell(ghost.location, ghost.currCellContent)
@@ -92,38 +95,41 @@ function getMoveDiff() {
 }
 
 function getGhostHTML(ghost) {
-    return `<span style="color:${ghost.color};">${GHOST}</span>`
+    return `<span style="background-color:${ghost.color};">${GHOST}</span>`
 }
 
 function changeGhostsDuringSuperPower() {
-            for (var i = 0; i < gGhosts.length; i++) {
-                    const ghost = gGhosts[i]
-                    ghost.aliveColor = ghost.color
-                    ghost.color = 'aqua'
-                }
-            setTimeout(() => {
-                gIsSuperPower = false
-                for (var i = 0; i < gGhosts.length; i++) {
-                    const ghost = gGhosts[i]
-                    ghost.color = ghost.aliveColor
-                }
-                
-            }, 5000);
+    for (var i = 0; i < gGhosts.length; i++) {
+        const ghost = gGhosts[i]
+        ghost.aliveColor = ghost.color
+        ghost.color = 'aqua'
+        renderCell(ghost.location, GHOST)
+    }
+    setTimeout(() => {
+        gIsSuperPower = false
+        for (var i = 0; i < gGhosts.length; i++) {
+            const ghost = gGhosts[i]
+            ghost.color = ghost.aliveColor
+        }
+
+    }, 5000);
 }
 
 function killGhost(ghostLocation) {
     console.log('killing ghost')
     for (var i = 0; i < gGhosts.length; i++) {
-            const ghost = gGhosts[i]
-            if (ghost.location.i === ghostLocation.i && ghost.location.j === ghostLocation.j) {
-                var ghostIdx = gGhosts.indexOf(ghost)
-                var killedGhost = gGhosts[ghostIdx]
-                
-                gGhosts.splice(ghostIdx,1) 
-            }
+        const ghost = gGhosts[i]
+        if (ghost.location.i === ghostLocation.i && ghost.location.j === ghostLocation.j) {
+            var ghostIdx = gGhosts.indexOf(ghost)
+            var killedGhost = gGhosts[ghostIdx]
+
+            gGhosts.splice(ghostIdx, 1)
+            setTimeout(reviveGhost, 5000, killedGhost, ghostIdx);
         }
-    setTimeout(() => {
-        killedGhost.color = killedGhost.aliveColor
-        gGhosts.splice(ghostIdx,0,killedGhost)
-    }, 5000, killedGhost);
+    }
+}
+
+function reviveGhost(killedGhost, ghostIdx) {
+    killedGhost.color = killedGhost.aliveColor
+    gGhosts.splice(ghostIdx, 0, killedGhost)
 }
